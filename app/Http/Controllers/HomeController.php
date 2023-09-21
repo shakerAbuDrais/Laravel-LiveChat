@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -24,8 +25,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $subjects = Subject::all();
+        $user = Auth::user();
+        $userId = $user->id;
+        $subjects = Subject::where('user_id', $userId)->get();
 
-        return view('home', ['subjects' => $subjects]);
+        $data = [
+            'username' => $user->name,
+            'email' => $user->email,
+            'subjects' => $subjects,
+        ];
+
+        return view('home', $data);
     }
 }

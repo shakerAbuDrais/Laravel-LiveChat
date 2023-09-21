@@ -14,29 +14,48 @@
                             </div>
                         @endif
 
-                        {{ __('You are logged in!') }}
+                        <h1>Welcome, {{ $username }}!</h1>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>User Name</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <tr>
+                                        <td>{{ $username }}</td>
+                                        <td>{{ $email }}</td>
+                                    </tr>
+
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
             </div>
         </div>
+        <div class="container">
+            <h2>Subjects</h2>
 
-        <h2>Subjects</h2>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Subject</th>
-                    <th>Pass Mark</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($subjects as $subject)
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>{{ $subject->subject }}</td>
-                        <td>{{ $subject->pass_mark }}</td>
+                        <th>Subject</th>
+                        <th>Pass Mark</th>
+                        <th>Mark Obtained</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($subjects as $subject)
+                        <tr>
+                            <td>{{ $subject->subject }}</td>
+                            <td>{{ $subject->pass_mark }}</td>
+                            <td>{{ $subject->mark_obtained }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 @endsection

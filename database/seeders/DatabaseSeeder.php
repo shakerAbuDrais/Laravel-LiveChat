@@ -15,12 +15,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $subject = new Subject();
+      $subjects = [
+        ['Math', 50],
+        ['Science', 60],
+        ['English', 70],
+      ];
 
-        $subject->user_id = 1;
-        $subject->subject = 'Math';
-        $subject->pass_mark = 50;
+      foreach ($subjects as $subject) {
+        $newSubject = new Subject();
 
-        $subject->save();
+        $newSubject->user_id = 1;
+        $newSubject->subject = $subject[0];
+        $newSubject->pass_mark = $subject[1];
+
+        $newSubject->save();
+      }
     }
 }
