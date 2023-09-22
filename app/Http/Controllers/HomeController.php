@@ -26,8 +26,9 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $userId = $user->id;
-        $subjects = Subject::where('user_id', $userId)->get();
+        $subjects = Subject::whereHas('users', function ($query) use ($user) {
+            $query->where('users.id', $user->id);
+        })->get();
 
         $data = [
             'username' => $user->name,

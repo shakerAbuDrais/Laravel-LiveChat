@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Subject;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,20 +16,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-      $subjects = [
-        ['Math', 50],
-        ['Science', 60],
-        ['English', 70],
-      ];
+        // Create some subjects
+        $subjects = [
+            'Math',
+            'English',
+            'Science',
+            'History',
+            'Computer Science',
+        ];
 
-      foreach ($subjects as $subject) {
-        $newSubject = new Subject();
+        foreach ($subjects as $subject) {
+            Subject::create([
+                'subject' => $subject,
+            ]);
+        }
 
-        $newSubject->user_id = 1;
-        $newSubject->subject = $subject[0];
-        $newSubject->pass_mark = $subject[1];
+        // Assign some subjects to users
+        $users = User::all();
 
-        $newSubject->save();
-      }
+        foreach ($users as $user) {
+            $user->subjects()->attach(Subject::all()->random(3));
+        }
     }
 }

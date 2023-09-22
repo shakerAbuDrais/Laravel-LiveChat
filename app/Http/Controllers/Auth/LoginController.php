@@ -40,4 +40,13 @@ class LoginController extends Controller
             $this->username() => [trans('auth.failed')],
         ]);
     }
+
+    public function authenticated(Request $request, $user)
+    {
+        if ($user->role === 1) {
+            return redirect('/admin-dashboard');
+        }
+
+        return redirect($this->redirectTo);
+    }
 }

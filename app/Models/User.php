@@ -12,6 +12,10 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public function subjects()
+    {
+        return $this->belongsToMany(Subject::class, 'user_subject');
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -23,7 +27,6 @@ class User extends Authenticatable
         'password',
         'status'
     ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
