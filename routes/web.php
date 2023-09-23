@@ -24,6 +24,7 @@ Route::post('/store', [AdminController::class, 'store']);
 Route::post('/createSubject', [AdminController::class, 'createSubject']);
 Route::get('/getUnassignedSubjects', [AdminController::class, 'getUnassignedSubjects']);
 Route::get('/getUsersWithoutSubject', [AdminController::class, 'getUsersWithoutSubject']);
+Route::post('/assignSubject', [AdminController::class, 'assignSubject']);
 
 // Home route
 Route::get('/home', [HomeController::class, 'index'])->name('home');

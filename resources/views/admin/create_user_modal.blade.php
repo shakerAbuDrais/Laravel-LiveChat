@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 
 <body>
@@ -43,31 +43,31 @@
         </div>
     </div>
     <script>
-        $(document).ready(function() {
-            $('#addStudentForm').submit(function(event) {
-                event.preventDefault();
+        $('#addStudentForm').submit(function(event) {
+            event.preventDefault();
 
-                var formData = new FormData(this);
+            var formData = new FormData(this);
 
-                $.ajax({
-                    url: '/store',
-                    type: 'POST',
-                    data: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        if (response.success) {
-                            $('#addStudentModal').modal('hide');
-                            $('#studentTable').append('<tr><td>' + response.user.name +
-                                '</td><td>' + response.user.email + '</td></tr>');
-                        } else {
-                            alert('Error: ' + response.message);
-                        }
+            $.ajax({
+                url: '/store',
+                type: 'POST',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response && response.success) {
+                        $('#studentTable').append('<tr><td>' + response.user.name +
+                            '</td><td>' + response.user.email + '</td></tr>');
+                    } else {
+                        alert('Error: ' + response.message);
                     }
-                });
+                },
+                error: function(error) {
+                    console.log(error);
+                }
             });
         });
     </script>

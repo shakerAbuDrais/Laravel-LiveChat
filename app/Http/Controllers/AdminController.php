@@ -58,7 +58,8 @@ class AdminController extends Controller
         ]);
     }
 
-    public function getUnassignedSubjects(Request $request) {
+    public function getUnassignedSubjects(Request $request)
+    {
         $userId = $request->input('user_id');
 
         // Get the subjects not assigned to the selected user
@@ -69,7 +70,8 @@ class AdminController extends Controller
         return response()->json($unassignedSubjects);
     }
 
-    public function getUsersWithoutSubject(Request $request) {
+    public function getUsersWithoutSubject(Request $request)
+    {
         $subjectId = $request->input('subject_id');
 
         // Get the users who do not have the selected subject
@@ -78,5 +80,30 @@ class AdminController extends Controller
         })->get();
 
         return response()->json($usersWithoutSubject);
+    }
+
+    public function assignSubject(Request $request)
+    {
+        // Get user ID and subject ID from the request
+        $userId = $request->input('user_id');
+        $subjectId = $request->input('subject_id');
+
+        // Check if the user and subject exist
+        $user = User::find($userId);
+        $subject = Subject::find($subjectId);
+
+        if (!$user || !$subject) {
+            return response()->json(['success' => false, 'message' => 'User or subject not found.']);
+        }
+
+        // Check if the user already has the subject assigned
+        if ($user->subjects->contains($subjectId)) {
+            return response()->json(['success' => false, 'message' => 'User already has this subject.']);
+        }
+
+        // Attach the subject to the user
+        $user->subjects()->attach($subjectId);
+
+        return response()->json(['success' => true, 'message' => 'Subject assigned successfully']);
     }
 }
