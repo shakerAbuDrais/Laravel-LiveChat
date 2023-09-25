@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 
 class AdminController extends Controller
 {
@@ -36,11 +38,13 @@ class AdminController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+        $user->status = $request->status ?? 'inactive';
         $user->save();
 
         return response()->json([
             'success' => true,
             'message' => 'User created successfully.',
+            'user' => $user,
         ]);
     }
 
@@ -105,5 +109,80 @@ class AdminController extends Controller
         $user->subjects()->attach($subjectId);
 
         return response()->json(['success' => true, 'message' => 'Subject assigned successfully']);
+    }
+
+    public function storeMark(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $subject_id = $request->input('subject_id');
+        $obtained_mark = $request->input('obtained_mark');
+
+        // Check if the combination of user_id and subject_id exists
+        $existingRecord = DB::table('user_subject')
+            ->where('user_id', $user_id)
+            ->where('subject_id', $subject_id)
+            ->first();
+
+        if ($existingRecord) {
+            // If the record exists, update the obtained_mark
+            DB::table('user_subject')
+                ->where('user_id', $user_id)
+                ->where('subject_id', $subject_id)
+                ->update(['obtained_mark' => $obtained_mark]);
+        } else {
+            // If the record doesn't exist, insert a new row
+            DB::table('user_subject')->insert([
+                'user_id' => $user_id,
+                'subject_id' => $subject_id,
+                'obtained_mark' => $obtained_mark,
+            ]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Mark added successfully']);
+    }
+
+    public function updateUser(Request $request)
+    {
+        // Get the user ID from the form data
+        $userId = $request->input('user_id');
+
+        // Retrieve the user by their ID
+        $user = User::find($userId);
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not found'], 404);
+        }
+
+        // Update the user's name and email
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+
+        // Check if the 'status' checkbox is checked and update the user's status accordingly
+        $user->status = $request->has('status') ? 'active' : 'inactive';
+
+        // Save the updated user
+        $user->save();
+
+        return Redirect::back()->with('message', 'Operation Successful !');
+    }
+
+    public function deleteUser(Request $request)
+    {
+        $userId = $request->input('userId');
+
+        // Retrieve the user
+        $user = User::find($userId);
+
+        if ($user) {
+            // Detach the user from all subjects before deleting
+            $user->subjects()->detach();
+
+            // Delete the user
+            $user->delete();
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
     }
 }

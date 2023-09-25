@@ -14,7 +14,8 @@ class User extends Authenticatable
 
     public function subjects()
     {
-        return $this->belongsToMany(Subject::class, 'user_subject');
+        return $this->belongsToMany(Subject::class, 'user_subject')
+            ->withPivot('obtained_mark');
     }
     /**
      * The attributes that are mass assignable.

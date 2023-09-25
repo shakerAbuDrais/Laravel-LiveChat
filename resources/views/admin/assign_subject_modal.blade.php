@@ -42,7 +42,6 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <!-- Replace the submit input with a regular button -->
                         <input type="button" class="btn btn-success" id="addSubjectButton" value="Add">
                     </div>
                 </div>

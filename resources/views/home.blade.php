@@ -51,7 +51,7 @@
                         <tr>
                             <td>{{ $subject->subject }}</td>
                             <td>{{ $subject->pass_mark }}</td>
-                            <td>{{ $subject->mark_obtained }}</td>
+                            <td>{{ $obtainedMarks[$subject->id] }}</td>
                         </tr>
                     @endforeach
                 </tbody>

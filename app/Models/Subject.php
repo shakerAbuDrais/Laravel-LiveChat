@@ -13,6 +13,7 @@ class Subject extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_subject');
+        return $this->belongsToMany(User::class, 'user_subject')
+            ->withPivot('obtained_mark');
     }
 }

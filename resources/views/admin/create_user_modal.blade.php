@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -43,34 +43,47 @@
         </div>
     </div>
     <script>
-        $('#addStudentForm').submit(function(event) {
-            event.preventDefault();
+        $(document).ready(function() {
+            $('#addStudentForm').submit(function(event) {
+                event.preventDefault();
 
-            var formData = new FormData(this);
+                var formData = new FormData(this);
 
-            $.ajax({
-                url: '/store',
-                type: 'POST',
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    if (response && response.success) {
-                        $('#studentTable').append('<tr><td>' + response.user.name +
-                            '</td><td>' + response.user.email + '</td></tr>');
-                    } else {
-                        alert('Error: ' + response.message);
+                $.ajax({
+                    url: '/store',
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response && response.success) {
+                            var newRow =
+                                '<tr><td><span class="custom-checkbox"><input type="checkbox" id="checkbox1" name="options[]" value="1"><label for="checkbox1"></label></span></td>' +
+                                '<td>' + response.user.name + '</td>' +
+                                '<td>' + response.user.email + '</td>' +
+                                '<td>' + response.user.status + '</td>' +
+                                '<td><a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>' +
+                                '<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td></tr>';
+
+                            $('#studentTable tbody').append(newRow);
+
+                            // Close the modal after a slight delay
+                            setTimeout(function() {
+                                $('#addStudentModal').modal('hide');
+                            }, 100);
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function(error) {
+                        console.log(error);
                     }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
+                });
             });
         });
     </script>
 </body>
-
 </html>
