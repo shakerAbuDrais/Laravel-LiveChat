@@ -34,9 +34,9 @@ Route::post('/deleteUser', [AdminController::class,'deleteUser'])->name('deleteU
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/chat', [ChatController::class, 'index']);
-    Route::get('/chat/{user}', [ChatController::class, 'show'])->name('chat.show');
+    // Route::get('/chat/{user}', [ChatController::class, 'show'])->name('chat.show');
+    Route::get('/chat/{receiverId}', [ChatController::class, 'show']);
     Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
-    Route::get('/chat/messages/{receiverId}', [ChatController::class, 'fetchMessages']);
 });
 
 
