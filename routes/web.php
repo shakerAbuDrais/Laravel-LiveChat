@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Contracts\Cache\Store;
@@ -30,6 +31,13 @@ Route::post('/assignSubject', [AdminController::class, 'assignSubject']);
 Route::post('/storeMark', [AdminController::class,'storeMark']);
 Route::post('/updateUser', [AdminController::class,'updateUser'])->name('updateUser');
 Route::post('/deleteUser', [AdminController::class,'deleteUser'])->name('deleteUser');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/chat', [ChatController::class, 'index']);
+    Route::get('/chat/{user}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('/chat/messages/{receiverId}', [ChatController::class, 'fetchMessages']);
+});
 
 
 // Home route
