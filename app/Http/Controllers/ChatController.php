@@ -33,7 +33,7 @@ class ChatController extends Controller
 
         $message->save();
 
-        // Broadcast the message to the receiver's channel
+        // Broadcast the message to the receiver's channel using Pusher
         broadcast(new NewMessage($message))->toOthers();
 
         return response()->json(['message' => 'Message sent']);

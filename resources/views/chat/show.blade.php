@@ -2,11 +2,16 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Chat with {{ $receiver->name }}</title>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 </head>
 
@@ -18,30 +23,30 @@
                 <div class="message {{ $message->sender_id == Auth::user()->id ? 'sender' : 'receiver' }}">
                     <span class="message-sender">
                         {{ $message->sender->name }}
-                    </span>
+                        </span>
                     {{ $message->message }}
-                </div>
+                    </div>
             @endforeach
-        </div>
+            </div>
         <div id="message-form">
             <input type="text" id="message-input" placeholder="Type a message">
             <button id="send-button">Send</button>
+            </div>
         </div>
-    </div>
+
 
     <script>
-        // Initialize Pusher with your credentials
-        const pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
-            cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
-            encrypted: true,
+        Pusher.logToConsole = true;
+        var pusher = new Pusher('a3647b96754ff79530ea', {
+            cluster: 'ap2'
         });
 
-        // Subscribe to the user-specific channel
-        const channel = pusher.subscribe('chat.{{ $receiver->id }}');
-        // Event handler for new messages
+        var channel = pusher.subscribe('chat.{{ $receiver->id }}');
         channel.bind('App\\Events\\NewMessage', function(data) {
-            // Append the new message to the chat interface
-            console.log(data.message.message);
+            $('#messages').append('<div class="message">' + data.message.message + '</div>');
+        });
+
+        pusher.subscribe('chat.{{ Auth::user()->id }}').bind('App\\Events\\NewMessage', function(data) {
             $('#messages').append('<div class="message">' + data.message.message + '</div>');
         });
 
@@ -66,6 +71,7 @@
             });
         });
     </script>
+
 </body>
 
 </html>
